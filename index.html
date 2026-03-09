@@ -3,146 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Kamu ❤️</title>
+    <title>Happy Birthday Iyenn ❤️</title>
+    <!-- Import Font Romantis -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <!-- Library Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
+        :root {
+            --primary: #ff758c;
+            --secondary: #ff7eb3;
+            --bg: #2b2d42;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background: #ffe6e6; /* Warna pink lembut */
-            font-family: 'Arial', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-y: auto;   /* Allow vertical scroll */
+            background: 
+                linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                url('https://i.ibb.co.com/n8Q270X6/photo-2026-03-09-14-43-43.jpg') center / cover no-repeat fixed;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            text-align: center;
         }
 
+        /* Container Utama */
         .container {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 90%;
-            width: 350px;
-            animation: popUp 0.5s ease-out;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            padding: 20px;
+            max-width: 600px;
+            width: 90%; /* Responsive width */
+            margin: 20px 0; /* Add margin for scrolling */
+        }
+
+        /* Layar Pembuka */
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            transition: opacity 1s ease;
+        }
+
+        .btn-start {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 117, 140, 0.5);
+            transition: transform 0.3s ease;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.1);
+        }
+
+        /* Konten Utama */
+        #main-content {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s ease;
+            display: none; /* Hidden by default */
+        }
+
+        .photo-frame {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid var(--primary);
+            overflow: hidden;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 30px rgba(255, 117, 140, 0.6);
+            animation: float 3s ease-in-out infinite;
+            background-color: #fff;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         h1 {
-            color: #ff4d6d;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin: 10px 0;
+            background: -webkit-linear-gradient(var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 117, 140, 0.3);
         }
 
-        p {
-            color: #555;
-            font-size: 1rem;
-            margin-bottom: 25px;
+        .message-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 100px;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
 
-        .gif-container {
-            margin-bottom: 20px;
-        }
-        
-        .gif-container img {
-            width: 150px;
-            border-radius: 10px;
-        }
-
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            position: relative;
-            height: 50px; /* Space for buttons */
+        /* Animasi Hati Background */
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        button {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            font-weight: bold;
+        .heart {
+            position: absolute;
+            background-color: rgba(255, 117, 140, 0.2);
+            display: inline-block;
+            height: 30px;
+            margin: 0 10px;
+            top: 0;
+            transform: rotate(-45deg);
+            width: 30px;
+            animation: animate-heart 15s linear infinite;
         }
 
-        #btn-yes {
-            background: #ff4d6d;
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+        .heart:before, .heart:after {
+            content: "";
+            background-color: rgba(255, 117, 140, 0.2);
+            border-radius: 50%;
+            height: 30px;
+            position: absolute;
+            width: 30px;
         }
 
-        #btn-no {
-            background: #ddd;
-            color: #333;
-            position: absolute; /* Supaya bisa dipindah-pindah */
-            right: 20px; /* Posisi awal */
+        .heart:before { top: -15px; left: 0; }
+        .heart:after { left: 15px; top: 0; }
+
+        @keyframes animate-heart {
+            0% { transform: translateY(110vh) scale(0.5) rotate(-45deg); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5) rotate(-45deg); opacity: 0; }
         }
 
-        /* Animasi muncul */
-        @keyframes popUp {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; margin: 5px 0; }
+            .photo-frame { width: 140px; height: 140px; margin-bottom: 15px; }
+            .message-box { 
+                font-size: 0.8rem; 
+                padding: 15px; 
+                line-height: 1.4;
+                max-height: 40vh; /* Limit height and scroll if too long inside box */
+                overflow-y: auto;
+            }
+            .btn-start { padding: 12px 30px; font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <audio id="bg-music" autoplay loop>
-        <source src="https://haribahagiaaku.com/wp-content/uploads/2022/01/Tulus-Teman-Hidup.mp3" type="audio/mp3">
+    <!-- Musik Latar (Ganti source dengan link lagu favorit kalian) -->
+    <!-- Contoh menggunakan file lokal: src="lagu-kita.mp3" -->
+    <audio id="bg-music" loop>
+        <source src="https://archive.org/download/VirgounSuratCintaUntukStarla/Virgoun%20-%20Surat%20Cinta%20Untuk%20Starla.mp3" type="audio/mp3">
+        Browser kamu tidak mendukung audio.
     </audio>
 
-    <div class="container">
-        <!-- Gambar Lucu (Ganti linknya kalau mau) -->
-        <div class="gif-container">
-            <img src="https://i.ibb.co.com/bRdwXQKz/iyenn.jpg" alt="Cute Gif">
+    <!-- Background Hati -->
+    <div class="hearts" id="hearts-container"></div>
+
+    <!-- Layar Pembuka -->
+    <div id="start-screen">
+        <button class="btn-start" onclick="mulaiKejutan()">Klik untuk Buka Hadiah 🎁</button>
+    </div>
+
+    <!-- Konten Utama -->
+    <div class="container" id="main-content">
+        <div class="photo-frame">
+            <!-- GANTI FOTO DI SINI -->
+            <!-- Bisa pakai link gambar online atau file lokal seperti 'foto.jpg' -->
+            <img src="https://i.ibb.co.com/bRdwXQKz/iyenn.jpg" alt="My Girl">
+            <!-- <a href="https://ibb.co.com/qF1qp7rk"><img src="https://i.ibb.co.com/bRdwXQKz/iyenn.jpg" alt="iyenn" border="0"></a> -->
+        </div>
+        
+        <h1 id="greeting" style="margin-bottom: 20px;">Happy Birthday!</h1>
+        
+        <div class="message-box">
+            <p id="typewriter-text"></p>
         </div>
 
-        <!-- Pertanyaan -->
-        <h1>Hai Iyen, btw Selamat Ulang Tahun Ya! ❤️</h1>
-        <p>sebelumnya aku minta maaf dulu, karna aku gak romantis dan gak bisa ungkapkan langsung perasaan ku ke ikm. Mungkin karna aku pemalu dan aku anak IT, jadinya cuma bisa lewat ini aja. <br> Mau Gak Jadi Pacarku?</p>
-
-        <!-- Tombol -->
-        <div class="btn-group">
-            <button id="btn-yes" onclick="kirimPesan()">Mau 🥰</button>
-            <button id="btn-no" onmouseover="pindahTombol()" onclick="pindahTombol()">Enggak 😜</button>
+        <div class="footer">
+            Dibuat dengan ❤️ untukmu
         </div>
     </div>
 
     <script>
-        // --- KONFIGURASI NOMOR WA ---
-        // Ganti dengan nomor WhatsApp kamu (pakai kode negara 62, tanpa +)
-        const nomorWA = "6282254905544"; 
-
-        // Pesan yang akan dikirim otomatis
-        const pesanIsi = "Hai Ikyy! Aku mau jadi pacar km 🥰❤️‍🔥, Makasih ya udah bikin hari spesialku jadi lebih Spesial 😘🫶🏻❤️";
-
-        // ---------------------------
-
-        function kirimPesan() {
-            const pesanFinal = encodeURIComponent(pesanIsi);
-            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-            const linkMobile = `https://api.whatsapp.com/send?phone=${nomorWA}&text=${pesanFinal}&app_absent=0`;
-            const linkDesktop = `https://web.whatsapp.com/send?phone=${nomorWA}&text=${pesanFinal}`;
-            const linkWA = isMobile ? linkMobile : linkDesktop;
-            window.location.href = linkWA;
-        }
-
-        function pindahTombol() {
-            const btnNo = document.getElementById('btn-no');
+        // --- KONFIGURASI PESAN DI SINI ---
+        const namaPasangan = "Iyenn"; // Ganti dengan nama panggilan
+        const pesanRomantis = [
+            "Hai, Iyenn...",
+            "Selamat ulang tahun ya! 🎉",
+            "Di hari spesial km ini, aku cuma mau bilang...",
+            "jujur aku udah lama gak berhubungan dengan siapapun dan setelah sekian lama akhirnya aku kembali berani untuk memulai sebuah hubungan dengan seseorang yaitu ikam. aku kada tahu hubungan ini akan berjalan mulus atau pupus, tapi yang ku tau aku akan menerima apapun hasilnya kedepannya. dan aku juga gak tau kenapa orangnya itu ikam, tapi yang ku tau dengan ikam aku merasa aman dan nyaman. jadi aku mau ungkapkan perasaan kalo aku suka sama km sejak awal aku melihat ikam, ikam boleh nolak perasaan ku, tapi tidak dengan hadiah ku, karena hadiah ini tulus dari ku untuk ikam yang sudah menemani ku selama bulan puasa ini dan tanda bangga ku ke ikam karena km sudah berkerja sekeras ini untuk diri ikam sendiri.",
+            "Happy Birthday ya Iyen semoga panjang umur dan sehat selalu, I Love U ❤️",
+            " ",
+            "-Muhammad Rezqi. Z"
             
-            // Ambil lebar dan tinggi layar (dikurangi margin aman)
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
+        ];
+        
+        // --- LOGIKA PROGRAM ---
 
-            // Ubah posisi tombol jadi 'fixed' biar bisa lari ke mana aja di layar
-            btnNo.style.position = 'fixed';
-            btnNo.style.left = x + 'px';
-            btnNo.style.top = y + 'px';
+        function buatHati() {
+            const container = document.getElementById('hearts-container');
+            for(let i=0; i<15; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = Math.random() * 3 + 7 + "s"; 
+                heart.style.opacity = Math.random();
+                container.appendChild(heart);
+            }
         }
-    </script>
 
+        function mulaiKejutan() {
+            // 1. Putar Musik
+            const audio = document.getElementById('bg-music');
+            audio.play().catch(error => {
+                console.log("Autoplay dicegah browser, tapi tidak apa-apa.");
+            });
+
+            // 2. Hilangkan layar pembuka
+            const startScreen = document.getElementById('start-screen');
+            startScreen.style.opacity = 0;
+            setTimeout(() => {
+                startScreen.style.display = 'none';
+                tampilkanKontenUtama();
+            }, 1000);
+
+            // 3. Efek Confetti
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff758c', '#ff7eb3', '#ffffff']
+            });
+        }
+
+        function tampilkanKontenUtama() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.style.display = 'block';
+            
+            // Hack sedikit agar transisi CSS berjalan
+            setTimeout(() => {
+                mainContent.style.opacity = 1;
+                mainContent.style.transform = "scale(1)";
+            }, 50);
+
+            // Set Judul
+            document.getElementById('greeting').innerText = `Happy Birthday, ${namaPasangan}!`;
+
+            // Mulai ngetik pesan
+            ketikPesan(0, 0);
+        }
+
+        let currentLine = 0;
+        let currentChar = 0;
+        const textElement = document.getElementById('typewriter-text');
+
+        function ketikPesan() {
+            if (currentLine < pesanRomantis.length) {
+                if (currentChar < pesanRomantis[currentLine].length) {
+                    textElement.innerHTML += pesanRomantis[currentLine].charAt(currentChar);
+                    currentChar++;
+                    setTimeout(ketikPesan, 80); // Kecepatan ngetik
+                } else {
+                    textElement.innerHTML += "<br>"; // Pindah baris
+                    currentLine++;
+                    currentChar = 0;
+                    setTimeout(ketikPesan, 800); // Jeda antar baris
+                }
+            } else {
+                // Selesai ngetik, lempar confetti lagi
+                setInterval(() => {
+                    confetti({
+                        particleCount: 20,
+                        spread: 60,
+                        origin: { y: 0.6 },
+                        opacity: 0.5,
+                        disableForReducedMotion: true
+                    });
+                }, 3000);
+            }
+        }
+
+        // Inisialisasi Background Hati
+        buatHati();
+
+    </script>
 </body>
-</html>
+
+</html><source src="lagu-kita.mp3" type="audio/mp3">
